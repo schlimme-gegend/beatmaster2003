@@ -5,7 +5,6 @@ int t_beat;
 const int base = 30000;
 byte bpm;
 byte mem, oldBPM;
-byte rclBeats;
 boolean rclPressed;
 boolean pressed;
 byte sigPin = 12;
@@ -26,9 +25,6 @@ void raise(long t_now){
   digitalWrite(sigPin, HIGH);
   t_r = t_now + t_beat;
   t_d = t_now + 15;
-  if(rclPressed){
-    rclBeats += 1;
-  }
   pressed = !pressed;
 }
 
@@ -117,6 +113,7 @@ void loop()
       if(!rclPressed){
         oldBPM = bpm;
         setBPM(mem);
+        storeBPM(oldBPM);
       }
       rclPressed = true;
       break;
@@ -142,19 +139,14 @@ void loop()
       {
         raise(millis());
       }
-      if(rclPressed && rclBeats > 4)
-      {
-        rclPressed = false;
-        rclBeats = 0;
-        setBPM(oldBPM);
-      }
+      rclPressed = false;
       pressed = false;
-
       break;
     }
   }
 
 }
+
 
 
 
